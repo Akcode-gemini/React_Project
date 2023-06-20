@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import Form from './Components/CustomForm/Form';
+import View from './Components/CustomForm/View';
 import './App.css';
-
+import { useState } from 'react';
+import Login from './Components/CustomLogin/Login';
+import Registration from './Components/CustomRegistration/Registration';
+import Error from './Error';
+import { BrowserRouter,Route,Routes } from 'react-router-dom';
+import Logout from './Logout';
 function App() {
+  const [isLogin,setIsLogin]=useState(false)
+  const handleLogIn=()=>{
+     setIsLogin(true)
+  }
+  const handleLogOut=()=>{
+    setIsLogin(false)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {/* <CustomNavbar/> */}
+      <BrowserRouter>
+        <Routes>
+          
+          <Route path="/" element={<Registration />} />
+          <Route path="/login" element={<Login onLogin={handleLogIn} />} />
+          {isLogin?(<>
+            <Route path="/create" element={<Form />} />
+           <Route path="/view" element={<View/>} /> 
+          
+          </>):("")}
+          <Route path="/logout" element={<Logout onLogOut={handleLogOut} />}/>
+           <Route path="*" element={<Error/>}/>  
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
