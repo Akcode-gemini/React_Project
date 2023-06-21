@@ -5,8 +5,10 @@ import { useState } from 'react';
 import Login from './Components/CustomLogin/Login';
 import Registration from './Components/CustomRegistration/Registration';
 import Error from './Error';
+import LoginRequired from './LoginRequired'
 import { BrowserRouter,Route,Routes } from 'react-router-dom';
 import Logout from './Logout';
+// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [isLogin,setIsLogin]=useState(false)
   const handleLogIn=()=>{
@@ -27,7 +29,11 @@ function App() {
             <Route path="/create" element={<Form />} />
            <Route path="/view" element={<View/>} /> 
           
-          </>):("")}
+          </>):(
+          <>
+          <Route path="/create" element={<LoginRequired />} />
+           <Route path="/view" element={<LoginRequired/>} /> 
+          </>)}
           <Route path="/logout" element={<Logout onLogOut={handleLogOut} />}/>
            <Route path="*" element={<Error/>}/>  
         </Routes>

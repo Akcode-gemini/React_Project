@@ -5,17 +5,39 @@ export default function Login(props) {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const[usernameError,setUsernameError]=useState("");
+   const[passwordError,setPasswordError]=useState("");
   
     const handleUsernameChange = (e) => {
-      setUsername(e.target.value);
+      const value =e.target.value;
+      setUsername(value);
+      setUsernameError("");
+      if(!/^[a-zA-Z0-9]+$/.test(value)){
+        setUsernameError("Username should contain only letters and numbers");
+    }
+    else if(value.length<5){
+        setUsernameError("Username should be atleast 5 characters long");
+    }
+    else if(value.length>20){
+        setUsernameError("Username should not exceed 20 characters");
+    }
     };
   
     const handlePasswordChange = (e) => {
-      setPassword(e.target.value);
+      const value =e.target.value;
+      setPassword(value);
+      setPasswordError("");
+      if(value.length<5){
+          setPasswordError("Password should be atleast 5 characters long");
+      }
     };
   
     const handleLogin = (e) => {
       e.preventDefault();
+      //validate fields before login
+      if(usernameError||passwordError){
+        return;
+    }
   
       // Check if user exists 
       const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -60,6 +82,7 @@ export default function Login(props) {
               onChange={handleUsernameChange}
               autoComplete="off"
             />
+            {usernameError&& <div className='error  text-danger'>*{usernameError}</div>}
           </div>
           <div className="form-group">
             <label className="form-label">Password:</label>
@@ -70,6 +93,7 @@ export default function Login(props) {
               onChange={handlePasswordChange}
               autoComplete="off"
             />
+            {passwordError&& <div className='error text-danger'>*{passwordError}</div>}
           </div>
           <button className="btn btn-primary customButton" type="submit">
             Login

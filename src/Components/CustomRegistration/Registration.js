@@ -5,19 +5,47 @@ export default function Registration() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [mobile, setMobile] = useState("");
+   const[usernameError,setUsernameError]=useState("");
+   const[passwordError,setPasswordError]=useState("");
+   const[nameError,setNameError]=useState("");
 
     const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
+        const value =e.target.value;
+        setUsername(value);
+        setUsernameError("");
+        if(!/^[a-zA-Z0-9]+$/.test(value)){
+            setUsernameError("Username should contain only letters and numbers");
+        }
+        else if(value.length<5){
+            setUsernameError("Username should be atleast 5 characters long");
+        }
+        else if(value.length>20){
+            setUsernameError("Username should not exceed 20 characters");
+        }
     };
 
     const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
+        const value =e.target.value;
+        setPassword(value);
+        setPasswordError("");
+        if(value.length<5){
+            setPasswordError("Password should be atleast 5 characters long");
+        }
     };
 
     const handleNameChange = (e) => {
-        setName(e.target.value);
+        const value =e.target.value;
+        setName(value);
+        setNameError("");
+        if(!/^[a-zA-Z\s]+$/.test(value)){
+            setNameError("Name should contain only letters and spaces");
+        }
+        else if(value.length<3){
+            setNameError("Name should be atleast 3 characters long");
+        }
+        else if(value.length>30){
+            setNameError("Name should not exceed 30 characters");
+        }
     };
 
     // const handleEmailChange = (e) => {
@@ -30,6 +58,10 @@ export default function Registration() {
 
     const handleRegister = (e) => {
         e.preventDefault();
+        //validate fields before registration
+        if(nameError||usernameError||passwordError){
+            return;
+        }
 
         // Check if user already exists
         const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -47,15 +79,18 @@ export default function Registration() {
             password,
             name,
         };
-
+        
         users.push(newUser);
         localStorage.setItem("users", JSON.stringify(users));
+        
 
         alert("Registration successful. Please login.");
         setUsername("");
         setPassword("");
         setName("");
     };
+    
+    
     const link = [
         { name: "Login", path: "/login" },
         { name: "Register", path: "/" },
@@ -77,8 +112,9 @@ export default function Registration() {
                                 className="form-control"
                                 value={name}
                                 onChange={handleNameChange}
-                                placeholder=""
+                                placeholder="Enter the name"
                             />
+                            {nameError&& <div className='error  text-danger'>*{nameError}</div>}
                         </div>
 
                         <div className="form-group">
@@ -89,6 +125,7 @@ export default function Registration() {
                                 value={username}
                                 onChange={handleUsernameChange}
                             />
+                            {usernameError&& <div className='error  text-danger'>*{usernameError}</div>}
                         </div>
                         <div className="form-group">
                             <label className="form-label">Password:</label>
@@ -99,6 +136,7 @@ export default function Registration() {
                                 onChange={handlePasswordChange}
                                 placeholder=""
                             />
+                            {passwordError&& <div className='error  text-danger'>*{passwordError}</div>}
                         </div>
 
                         <button type="submit" className="btn btn-primary customButton">
